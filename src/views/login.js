@@ -1,7 +1,11 @@
 import React from 'react';
 
-import Card from '../compoments/card';
-import FormGroup from '../compoments/form-group';
+import Card from '../components/card';
+import FormGroup from '../components/form-group';
+
+import {withRouter} from 'react-router-dom'
+
+import axios, { Axios } from 'axios'
 
 class Login extends React.Component {
 
@@ -10,15 +14,20 @@ class Login extends React.Component {
         senha: ''
     }
 
-    entrar = () => {
-        console.log("Email: ", this.state.email)
-        console.log("Senha: ", this.state.senha)
+    entrar = () => {             
+
+        axios.post('http://localhost:8080/api/usuarios/autenticar', 
+        {email: this.state.email, senha: this.state.senha}).then(function (response) { console.log(response)}).catch(function (erro) {console.log(erro.response)})        
+
+    }
+
+    prepareCadastrar = () => {
+        this.props.history.push('/cadastro-usuarios')
     }
 
     render() 
     {
-        return (
-        <div className="container">
+        return (        
             <div className="row">
                 <div className="col-md-6" style={{ position: 'relative', left: '300px'}}>
                   <div className="bs-docs-section">
@@ -34,7 +43,7 @@ class Login extends React.Component {
                                             <input type="password" value={this.state.senha} onChange={e => this.setState({senha: e.target.value})} className="form-control" id="exampleInputPassword1" placeholder="Password"/>
                                           </FormGroup>
                                           <button onClick={this.entrar} className="btn btn-success">Entrar</button>
-                                          <button className="btn btn-danger">Cadastrar</button>
+                                          <button onClick={this.prepareCadastrar} className="btn btn-danger">Cadastrar</button>
                                       </fieldset>
                                   </div>
                               </div>
@@ -42,11 +51,10 @@ class Login extends React.Component {
                       </Card>
                   </div>
                 </div>
-            </div>
-        </div>
+            </div>        
         )
     }
     
 }
 
-export default Login;
+export default withRouter(Login);
